@@ -1,0 +1,60 @@
+﻿@using MicroondasDigital.Application.App.Controllers
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": true,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+@{
+    MicroondasDigital.Application.App.Controllers.ControllerBase.FlashMessageType type = MicroondasDigital.Application.App.Controllers.ControllerBase.FlashMessageType.None;
+    string msg = "";
+    if (TempData["msgType"] != null)
+    {
+        type = (MicroondasDigital.Application.App.Controllers.ControllerBase.FlashMessageType)TempData["msgType"];
+        msg = (string)TempData["msgText"];
+    }
+}
+@if (type == MicroondasDigital.Application.App.Controllers.ControllerBase.FlashMessageType.Info)
+{
+    <script>
+        Swal.fire({
+            title: 'Informação!',
+            html: '@msg',
+            icon: 'info',
+            confirmButtonText: 'OK'
+        })
+    </script>
+}
+@if (type == MicroondasDigital.Application.App.Controllers.ControllerBase.FlashMessageType.Success)
+{
+    <script>
+        Swal.fire({
+            title: 'Sucesso!',
+            html: '@msg',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+    </script>
+}
+@if (type == MicroondasDigital.Application.App.Controllers.ControllerBase.FlashMessageType.Error)
+{
+    <script>
+        Swal.fire({
+            title: 'Erro!',
+            html: '@msg',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+    </script>
+}

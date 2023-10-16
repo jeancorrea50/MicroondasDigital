@@ -1,0 +1,72 @@
+﻿@model MicroondasDigital.Domain.Models.Microonda
+
+<h3>Crie Pre-Aquecimento Customizado</h3>
+<hr />
+<form asp-action="Create" method="post" class="form-horizontal" role="form">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Alimento" class="control-label"></label>
+            <input asp-for="Alimento" class="form-control" />
+            <span asp-validation-for="Alimento" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Tempo" class="control-label"></label>
+                <input asp-for="Tempo" class="form-control" />
+                <span asp-validation-for="Tempo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Potencia" class="control-label"></label>
+                <input asp-for="Potencia" class="form-control" />
+                <span asp-validation-for="Potencia" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                <label asp-for="StringAquecimento" class="control-label"></label>
+                <input asp-for="StringAquecimento" class="form-control" />
+                <span asp-validation-for="StringAquecimento" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label asp-for="Instrucoes" class="control-label"></label>
+                <input asp-for="Instrucoes" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="form-group">
+            <input class="btn btn-success" type="submit" value="Salvar" />
+        </div>
+        &nbsp;
+        <div class="form-group">
+            <a class="btn btn-outline-info" asp-controller="Nivel3" asp-action="Index">Retornar</a>
+        </div>
+    </div>
+</form>
+
+
+

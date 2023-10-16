@@ -1,0 +1,101 @@
+﻿@model MicroondasDigital.Domain.Models.Microonda
+
+<h2>Nivel 2</h2>
+
+<br />
+
+
+
+@using (Html.BeginForm("Aquecimento", "Nivel2", FormMethod.Post, new { id = "form", enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Nome)
+                @Html.DropDownListFor(model => model.Id, (IEnumerable<SelectListItem>)ViewBag.PreAquecimento, string.Empty, new { @class = "form-control", style = "width:350px" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Alimento)
+                @Html.EditorFor(model => model.Alimento, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", placeholder = "" } })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Tempo)
+                @Html.EditorFor(model => model.Tempo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", placeholder = "" } })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Potencia)
+                @Html.EditorFor(model => model.Potencia, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", placeholder = "" } })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p>Instruções: <span id="Instrucoes"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p>Progresso: <span id="StringAquecimento"></span></p>
+                @*@Html.DisplayFor(model => model.Progresso, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", placeholder = "" } })*@
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+
+    <button type="submit" id="btnIniciarProcesso" class="btn btn-success">Aquecimento</button>
+    <button type="button" id="pausar" class="btn btn-danger">Pausar/Cancelar</button>
+}
+
+<script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@5.0.17/dist/browser/signalr.min.js"></script>
+
+<script>
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/nivel2Hub")
+        .build();
+
+    connection.start().catch(function (err) {
+        return console.log(err.toString());
+    });
+
+    connection.on("SendMessage", function (stringAquecimento, alimento, tempo, potencia, instrucoes) {
+
+        atualizarView(stringAquecimento, alimento, tempo, potencia, instrucoes);
+    });
+
+    function atualizarView(stringAquecimento, alimento, tempo, potencia, instrucoes) {
+
+        document.getElementById("StringAquecimento").innerText = stringAquecimento;
+        document.getElementById("Alimento").value = alimento;
+        document.getElementById("Tempo").value = tempo;
+        document.getElementById("Potencia").value = potencia;
+        document.getElementById("Instrucoes").innerText = instrucoes;
+    }
+
+     document.getElementById("pausar").addEventListener("click", function (event) {
+        event.preventDefault();
+
+        fetch('@Url.Action("PausarAquecimento", "Nivel2")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+     });
+
+</script>

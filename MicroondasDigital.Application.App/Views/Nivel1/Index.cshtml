@@ -1,0 +1,88 @@
+﻿@model MicroondasDigital.Domain.Dtos.MicroondasNivel1Dto
+
+<h2>Nivel 1</h2>
+<br />
+
+
+@using (Html.BeginForm("Aquecimento", "Nivel1", FormMethod.Post, new { id = "form", enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Tempo)
+                @Html.EditorFor(model => model.Tempo, new { htmlAttributes = new { @class = "form-control", placeholder = "" } })
+                <span asp-validation-for="Tempo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Potencia)
+                @Html.EditorFor(model => model.Potencia, new { htmlAttributes = new { @class = "form-control", placeholder = "" } })
+                <span asp-validation-for="Potencia" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.TempoAtual)
+                @Html.EditorFor(model => model.TempoAtual, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", placeholder = "" } })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p>Progresso: <span id="Progresso"></span></p>
+                @*@Html.DisplayFor(model => model.Progresso, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", placeholder = "" } })*@
+            </div>
+        </div>
+    </div>
+    <br />
+    <button type="submit" @*formaction="@Url.Action("Aquecimento", "Nivel1")"*@ hidden"hidden" id="btnIniciarProcesso" class="btn btn-success">Aquecimento/Inicio Rápido</button>
+    <button type="button" id="pausar" class="btn btn-danger">Pausar/Cancelar</button>
+}
+
+<br />
+
+<script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@5.0.17/dist/browser/signalr.min.js"></script>
+<script>
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/nivel1Hub")
+        .build();
+
+    connection.start().catch(function (err) {
+        return console.log(err.toString());
+    });
+
+    connection.on("SendMessage", function (progresso, tempoAtual, potenciaAtual) {
+
+        atualizarView(progresso, tempoAtual, potenciaAtual);
+    });
+
+    function atualizarView(progresso, tempoAtual, potenciaAtual) {
+
+        document.getElementById("TempoAtual").value = tempoAtual;
+        document.getElementById("Progresso").innerText = progresso;
+
+        if (tempoAtual === 0) {
+            document.getElementById("Progresso").innerText = "";
+            document.getElementById("Tempo").value = "";
+            document.getElementById("Potencia").value = "";
+        }
+    }
+
+     document.getElementById("pausar").addEventListener("click", function (event) {
+        event.preventDefault();
+
+        fetch('@Url.Action("PausarAquecimento", "Nivel1")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+    });
+
+</script>
